@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI获客管理系统界面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .crm-interface {
+            background: #0f172a;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #334155;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            padding: 20px 30px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f1f5f9;
+        }
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        .header-btn {
+            padding: 8px 16px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            color: #60a5fa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .header-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        .sidebar-title {
+            font-size: 14px;
+            color: #64748b;
+            text-transform: uppercase;
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .nav-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            border-left: 3px solid #3b82f6;
+        }
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 16px;
+        }
+        .dashboard-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .stat-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin: 0 0 5px 0;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #94a3b8;
+            margin: 0 0 10px 0;
+        }
+        .stat-change {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            display: inline-block;
+        }
+        .main-area {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+        }
+        .area-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .area-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin: 0;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+        .filter-tab {
+            padding: 8px 16px;
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #475569;
+            border-radius: 6px;
+            color: #94a3b8;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-tab.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #60a5fa;
+        }
+        .customer-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .customer-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+        .customer-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+        }
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .customer-info {
+            flex: 1;
+        }
+        .customer-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin: 0 0 5px 0;
+        }
+        .customer-details {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+        }
+        .customer-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-hot {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid #f87171;
+        }
+        .status-warm {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+        .status-cold {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+            border: 1px solid #9ca3af;
+        }
+        .ai-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="crm-interface">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+                <div class="logo-text">Notion AI CRM</div>
+            </div>
+            <div class="header-actions">
+                <a href="#" class="header-btn">🔄 同步数据</a>
+                <a href="#" class="header-btn">📊 导出报告</a>
+                <a href="#" class="header-btn">⚙️ 设置</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">导航菜单</div>
+                    <a href="#" class="nav-item active">
+                        <span class="nav-icon">📊</span>
+                        仪表盘
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        客户管理
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">💬</span>
+                        沟通记录
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">📈</span>
+                        销售漏斗
+                    </a>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">AI工具</div>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🎯</span>
+                        客户分析
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        邮件生成
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon">🤖</span>
+                        智能建议
+                    </a>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="ai-badge">AI分析</div>
+                        <div class="stat-value">12,456</div>
+                        <div class="stat-label">总客户数</div>
+                        <span class="stat-change">+25% 本月</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="ai-badge">AI预测</div>
+                        <div class="stat-value">35%</div>
+                        <div class="stat-label">转化率</div>
+                        <span class="stat-change">+20% 本月</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="ai-badge">AI优化</div>
+                        <div class="stat-value">¥1,680</div>
+                        <div class="stat-label">平均客单价</div>
+                        <span class="stat-change">+40% 本月</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="ai-badge">AI监控</div>
+                        <div class="stat-value">18个月</div>
+                        <div class="stat-label">客户生命周期</div>
+                        <span class="stat-change">+50% 本月</span>
+                    </div>
+                </div>
+
+                <div class="main-area">
+                    <div class="area-header">
+                        <h3 class="area-title">🎯 AI智能客户列表</h3>
+                        <div class="filter-tabs">
+                            <div class="filter-tab active">全部</div>
+                            <div class="filter-tab">高价值</div>
+                            <div class="filter-tab">新客户</div>
+                            <div class="filter-tab">待跟进</div>
+                        </div>
+                    </div>
+
+                    <div class="customer-list">
+                        <div class="customer-item">
+                            <div class="customer-avatar">张</div>
+                            <div class="customer-info">
+                                <div class="customer-name">张明 - 华为技术</div>
+                                <div class="customer-details">采购经理 • 跟进中 • AI评分: 95分</div>
+                            </div>
+                            <div class="customer-status status-hot">高价值</div>
+                        </div>
+
+                        <div class="customer-item">
+                            <div class="customer-avatar">李</div>
+                            <div class="customer-info">
+                                <div class="customer-name">李华 - 阿里巴巴</div>
+                                <div class="customer-details">市场总监 • 新客户 • AI评分: 88分</div>
+                            </div>
+                            <div class="customer-status status-warm">待跟进</div>
+                        </div>
+
+                        <div class="customer-item">
+                            <div class="customer-avatar">王</div>
+                            <div class="customer-info">
+                                <div class="customer-name">王芳 - 腾讯科技</div>
+                                <div class="customer-details">产品经理 • 意向明确 • AI评分: 92分</div>
+                            </div>
+                            <div class="customer-status status-hot">高价值</div>
+                        </div>
+
+                        <div class="customer-item">
+                            <div class="customer-avatar">刘</div>
+                            <div class="customer-info">
+                                <div class="customer-name">刘强 - 字节跳动</div>
+                                <div class="customer-details">运营总监 • 初步接触 • AI评分: 76分</div>
+                            </div>
+                            <div class="customer-status status-cold">初步接触</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Notion AI CRM • 成本: $10/月 vs 传统CRM $300/月 • 节省97% • 2025年12月13日
+        </div>
+    </div>
+</body>
+</html>

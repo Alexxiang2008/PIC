@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获客成本对比图表</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            aspect-ratio: 16/9;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+            margin: 0;
+        }
+        .savings-badge {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .chart-wrapper {
+            height: calc(100% - 80px);
+            margin-top: 60px;
+        }
+        .data-source {
+            position: absolute;
+            bottom: 10px;
+            right: 40px;
+            font-size: 12px;
+            color: #718096;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <h1 class="chart-title">获客成本对比：传统 vs AI</h1>
+        <div class="savings-badge">节省 75%</div>
+        <div class="chart-wrapper">
+            <canvas id="costComparisonChart"></canvas>
+        </div>
+        <div class="data-source">数据来源：1000+企业服务统计 | 生成时间：2025年12月13日</div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('costComparisonChart').getContext('2d');
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['传统获客', 'AI获客'],
+                datasets: [{
+                    label: '单个客户成本 (USD)',
+                    data: [800, 200],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(16, 185, 129, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    barThickness: 120
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `成本: $${context.parsed.y}/客户`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1000,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value;
+                            },
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#4a5568'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#2d3748'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutBounce'
+                }
+            }
+        });
+
+        // 添加数值标签
+        chart.options.plugins.datalabels = {
+            anchor: 'end',
+            align: 'top',
+            formatter: (value) => '$' + value,
+            font: {
+                weight: 'bold',
+                size: 18
+            },
+            color: function(context) {
+                return context.datasetIndex === 0 ? '#dc2626' : '#059669';
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROI计算图表</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .roi-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            aspect-ratio: 16/9;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .roi-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .roi-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 0 0 10px 0;
+        }
+        .roi-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin: 0;
+        }
+        .roi-highlight {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            z-index: 10;
+        }
+        .roi-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .roi-calculations {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e5e7eb;
+        }
+        .calculation-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #374151;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+        }
+        .calculation-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+        .calculation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .calculation-item:last-child {
+            border-bottom: none;
+        }
+        .calc-label {
+            font-size: 15px;
+            color: #4b5563;
+        }
+        .calc-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .calc-value.highlight {
+            color: #059669;
+            font-size: 20px;
+        }
+        .roi-chart {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-canvas {
+            flex: 1;
+            min-height: 250px;
+        }
+        .roi-benefits {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #93c5fd;
+        }
+        .benefits-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e40af;
+            margin: 0 0 15px 0;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .benefit-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #bfdbfe;
+        }
+        .benefit-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e40af;
+            margin: 0 0 5px 0;
+        }
+        .benefit-label {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+        }
+        .footer-info {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="roi-container">
+        <div class="roi-header">
+            <h1 class="roi-title">AI工具投资回报率分析</h1>
+            <p class="roi-subtitle">基于月度投入$394，月获客20个客户的ROI计算</p>
+        </div>
+
+        <div class="roi-highlight">投资回报率 2947%</div>
+
+        <div class="roi-content">
+            <div class="roi-calculations">
+                <h3 class="calculation-title">
+                    <div class="calculation-icon">💰</div>
+                    成本效益计算
+                </h3>
+
+                <div class="calculation-item">
+                    <span class="calc-label">月度工具投入</span>
+                    <span class="calc-value">$394</span>
+                </div>
+
+                <div class="calculation-item">
+                    <span class="calc-label">传统获客成本</span>
+                    <span class="calc-value">$800/客户</span>
+                </div>
+
+                <div class="calculation-item">
+                    <span class="calc-label">AI获客成本</span>
+                    <span class="calc-value">$200/客户</span>
+                </div>
+
+                <div class="calculation-item">
+                    <span class="calc-label">单个客户节省</span>
+                    <span class="calc-value highlight">$600</span>
+                </div>
+
+                <div class="calculation-item">
+                    <span class="calc-label">月度获客目标</span>
+                    <span class="calc-value">20个客户</span>
+                </div>
+
+                <div class="calculation-item">
+                    <span class="calc-label">月度总节省</span>
+                    <span class="calc-value highlight">$12,000</span>
+                </div>
+
+                <div class="calculation-item">
+                    <span class="calc-label">投资回收期</span>
+                    <span class="calc-value highlight">1天</span>
+                </div>
+            </div>
+
+            <div class="roi-chart">
+                <h3 class="calculation-title">
+                    <div class="calculation-icon">📈</div>
+                    成本对比分析
+                </h3>
+                <div class="chart-canvas">
+                    <canvas id="roiChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="roi-benefits">
+            <h3 class="benefits-title">🎯 累积效益分析（3年使用）</h3>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-number">$14,184</div>
+                    <div class="benefit-label">总投入成本</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">$432,000</div>
+                    <div class="benefit-label">总节省金额</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">$417,816</div>
+                    <div class="benefit-label">净收益</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">3005%</div>
+                    <div class="benefit-label">效率提升</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">60%</div>
+                    <div class="benefit-label">成本降低</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">20个/月</div>
+                    <div class="benefit-label">稳定获客</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            数据来源：1000+企业服务统计 • AI写作系统 v4.0 • 2025年12月13日
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('roiChart').getContext('2d');
+
+        const roiChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['传统获客', 'AI获客', '成本节省'],
+                datasets: [{
+                    label: '月度成本/收益 (USD)',
+                    data: [16000, 4394, 11606],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(16, 185, 129, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    barThickness: 80
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += '$' + context.parsed.y.toLocaleString();
+
+                                if (context.dataIndex === 0) {
+                                    label += ' (20客户 × $800)';
+                                } else if (context.dataIndex === 1) {
+                                    label += ' (20客户 × $200 + 工具费$394)';
+                                } else if (context.dataIndex === 2) {
+                                    label += ' (净节省金额)';
+                                }
+
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            },
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            },
+                            color: '#4a5568'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#2d3748'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutBounce'
+                }
+            }
+        });
+    </script>
+</body>
+</html>
